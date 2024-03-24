@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: api
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  datasource:
+    generate-unique-name: false
+    name: delivery
+  h2:
+    console:
+      enabled: true
+
+weather:
+  data:
+    url: https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php
+
