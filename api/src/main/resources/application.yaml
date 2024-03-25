@@ -13,6 +13,10 @@ spring:
     console:
       enabled: true
 
+logging:
+  level:
+    com.fujitsu.api: DEBUG
+
 weather:
   data:
     url: https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php

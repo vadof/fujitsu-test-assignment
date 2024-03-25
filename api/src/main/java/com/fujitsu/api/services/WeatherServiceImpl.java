@@ -4,7 +4,6 @@ import com.fujitsu.api.config.Constants;
 import com.fujitsu.api.dtos.xml.Observations;
 import com.fujitsu.api.dtos.xml.Station;
 import com.fujitsu.api.entities.WeatherCondition;
-import com.fujitsu.api.repositories.WeatherConditionRepository;
 import com.fujitsu.api.utils.ObservationsParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,7 @@ public class WeatherServiceImpl implements WeatherService {
     private String weatherDataUrl;
 
     private final RestTemplate restTemplate;
-    private final WeatherConditionRepository weatherConditionRepository;
+    private final WeatherConditionService weatherConditionService;
 
     @Override
     public void updateWeatherData() {
@@ -54,13 +53,13 @@ public class WeatherServiceImpl implements WeatherService {
 
         for (Station stationXML : observations.getStations()) {
             WeatherCondition weatherCondition = stationToWeatherCondition(stationXML, timestamp);
-            weatherConditionRepository.save(weatherCondition);
+            weatherConditionService.save(weatherCondition);
         }
     }
 
     public WeatherCondition stationToWeatherCondition(Station station, Timestamp timestamp) {
         String phenomenon = station.getPhenomenon().length() == 0 ?
-                Constants.DEFAULT_PHENONEMON : station.getPhenomenon();
+                Constants.DEFAULT_PHENOMENON : station.getPhenomenon();
 
         return WeatherCondition.builder()
                 .wmoCode(station.getWmocode())
