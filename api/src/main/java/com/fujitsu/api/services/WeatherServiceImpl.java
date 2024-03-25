@@ -14,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.xml.bind.JAXBException;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class WeatherServiceImpl implements WeatherService {
         }
     }
 
-    private List<Station> filterStationsByName(List<Station> stations, Set<String> stationNames) {
+    private List<Station> filterStationsByName(List<Station> stations, List<String> stationNames) {
         return stations.stream()
                 .filter(s -> stationNames.contains(s.getName()))
                 .toList();
