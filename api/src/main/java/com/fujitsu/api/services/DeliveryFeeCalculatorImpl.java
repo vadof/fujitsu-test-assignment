@@ -34,13 +34,13 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
         }
 
         if (!contains) {
-            throw new AppException("Invalid vehicle type - " + vehicleType, HttpStatus.BAD_REQUEST);
+            throw new AppException("Invalid vehicle type - " + vehicleType, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
     private WeatherCondition getWeatherCondition(String cityName) {
-        return weatherConditionService.getLatestWeatherConditionByCity(cityName)
-                .orElseThrow(() -> new AppException("No data for " + cityName, HttpStatus.NOT_FOUND));
+        return weatherConditionService.getLatestWeatherConditionByCity(cityName).orElseThrow(
+                () -> new AppException("No weather data available in Tallinn " + cityName, HttpStatus.NOT_FOUND));
     }
 
     public Double calculateRBF(String cityName, String vehicleType) {
@@ -88,7 +88,8 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
     @Override
     public Double calculateWSEF(Double windSpeed, String vehicleType) {
         if (windSpeed > 20 && vehicleType.equalsIgnoreCase("bike")) {
-            throw new AppException("Usage of selected vehicle type is forbidden", HttpStatus.BAD_REQUEST);
+            throw new AppException("The use of the selected type of vehicle is prohibited due to weather conditions",
+                    HttpStatus.FORBIDDEN);
         }
 
         if (windSpeed >= 10) {
@@ -111,7 +112,8 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
         } else if (phenomenon.contains("rain")) {
             return 0.5;
         } else if (phenomenon.contains("glaze") || phenomenon.contains("hail") || phenomenon.contains("thunder")) {
-            throw new AppException("Usage of selected vehicle type is forbidden", HttpStatus.BAD_REQUEST);
+            throw new AppException("The use of the selected type of vehicle is prohibited due to weather conditions",
+                    HttpStatus.FORBIDDEN);
         }
 
         return 0d;
