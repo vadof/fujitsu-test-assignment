@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,9 +18,9 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
 
     private final WeatherConditionService weatherConditionService;
 
-    public Double calculateDeliveryFee(String cityName, String vehicleType) {
+    public Double calculateDeliveryFee(String cityName, String vehicleType, LocalDateTime dateTime) {
         validateVehicleType(vehicleType);
-        WeatherCondition weatherCondition = getWeatherCondition(cityName);
+        WeatherCondition weatherCondition = getWeatherCondition(cityName, dateTime);
         return calculateRBF(cityName, vehicleType) + calculateWeatherFees(weatherCondition, vehicleType);
     }
 
@@ -38,9 +39,15 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
         }
     }
 
-    private WeatherCondition getWeatherCondition(String cityName) {
-        return weatherConditionService.getLatestWeatherConditionByCity(cityName).orElseThrow(
-                () -> new AppException("No weather data available in Tallinn " + cityName, HttpStatus.NOT_FOUND));
+    private WeatherCondition getWeatherCondition(String cityName, LocalDateTime dateTime) {
+        if (dateTime != null) {
+            return weatherConditionService.getWeatherConditionByCityAndDate(cityName, dateTime).orElseThrow(
+                    () -> new AppException(String.format("No weather data for %s at %s", cityName, dateTime),
+                            HttpStatus.NOT_FOUND));
+        } else {
+            return weatherConditionService.getLatestWeatherConditionByCity(cityName).orElseThrow(
+                    () -> new AppException("No weather data available for " + cityName, HttpStatus.NOT_FOUND));
+        }
     }
 
     public Double calculateRBF(String cityName, String vehicleType) {

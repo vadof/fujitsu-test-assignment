@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @Tag(name = "Delivery", description = "API operations with delivery")
 @RestController
 @RequestMapping("/api/v1/delivery")
@@ -24,7 +26,8 @@ public class DeliveryController {
 
     private final DeliveryFeeCalculatorImpl deliveryFeeCalculator;
 
-    @Operation(summary = "Calculate delivery fee depending on the city and type of vehicle")
+    @Operation(summary = "Calculate delivery fee depending on the city and type of vehicle." +
+            " If a date is specified, the fee will be calculated based on weather data that occurred during the specified period of time")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Fee calculated successfully",
@@ -40,10 +43,12 @@ public class DeliveryController {
                     content = @Content(mediaType = "*/*"))
     })
     @GetMapping("/fee")
-    public ResponseEntity<Double> getDeliveryFee(@RequestParam(name = "city") String city,
-                                                 @RequestParam(name = "vehicleType") String vehicleType) {
+    public ResponseEntity<Double> getDeliveryFee(
+            @RequestParam(name = "city") String city,
+            @RequestParam(name = "vehicleType") String vehicleType,
+            @RequestParam(name = "date", required = false) LocalDateTime date) {
         log.debug("REST request to get Delivery Fee {} - {}", city, vehicleType);
-        Double fee = deliveryFeeCalculator.calculateDeliveryFee(city, vehicleType);
+        Double fee = deliveryFeeCalculator.calculateDeliveryFee(city, vehicleType, date);
         return ResponseEntity.ok().body(fee);
     }
 

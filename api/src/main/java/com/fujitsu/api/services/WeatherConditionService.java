@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,19 +30,35 @@ public class WeatherConditionService {
     public Optional<WeatherCondition> getLatestWeatherCondition(String stationName) {
         WeatherCondition weatherCondition = latestData.get(stationName);
         if (weatherCondition == null) {
-            return weatherConditionRepository.findByStationName(stationName);
+            return weatherConditionRepository.findLatestByStationName(stationName);
         }
         return Optional.of(weatherCondition);
     }
 
     public Optional<WeatherCondition> getLatestWeatherConditionByCity(String cityName) {
-        List<String> cityNames = Constants.CITY_NAMES;
-        for (int i = 0; i < cityNames.size(); i++) {
-            if (cityNames.get(i).equalsIgnoreCase(cityName)) {
-                return getLatestWeatherCondition(Constants.STATION_NAMES.get(i));
-            }
+        Optional<String> optionalCityName = getStationNameByCityName(cityName);
+        if (optionalCityName.isPresent()) {
+            return getLatestWeatherCondition(optionalCityName.get());
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<WeatherCondition> getWeatherConditionByCityAndDate(String cityName, LocalDateTime dateTime) {
+        Optional<String> stationName = getStationNameByCityName(cityName);
+        if (stationName.isPresent()) {
+            return weatherConditionRepository.findByStationNameAtSpecifiedDate(stationName.get(), dateTime);
         }
         return Optional.empty();
     }
 
+    private Optional<String> getStationNameByCityName(String cityName) {
+        List<String> cityNames = Constants.CITY_NAMES;
+        for (int i = 0; i < cityNames.size(); i++) {
+            if (cityNames.get(i).equalsIgnoreCase(cityName)) {
+                return Optional.of(Constants.STATION_NAMES.get(i));
+            }
+        }
+        return Optional.empty();
+    }
 }
