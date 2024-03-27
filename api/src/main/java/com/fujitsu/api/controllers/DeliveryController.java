@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,7 @@ public class DeliveryController {
                     description = "Invalid vehicle type",
                     content = @Content(mediaType = "*/*"))
     })
-    @GetMapping("/fee")
+    @GetMapping(value = "/fee", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Double> getDeliveryFee(
             @RequestParam(name = "city") String city,
             @RequestParam(name = "vehicleType") String vehicleType,

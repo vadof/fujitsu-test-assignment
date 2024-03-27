@@ -35,7 +35,7 @@ public class WeatherServiceImpl implements WeatherService {
             observations.setStations(filterStationsByName(observations.getStations(), Constants.STATION_NAMES));
             saveObservations(observations);
 
-            log.info("Weather Observations have been updated");
+            log.debug("Weather Observations have been updated");
         } catch (JAXBException e) {
             log.error("Failed to update Weather Observations {}", e.getMessage());
         }

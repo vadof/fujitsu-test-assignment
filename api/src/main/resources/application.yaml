@@ -20,4 +20,5 @@ logging:
 weather:
   data:
     url: https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php
-
+  cron:
+    expression: 0 15 * * * *

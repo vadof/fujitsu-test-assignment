@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -38,7 +39,7 @@ public class RegionalBaseFeeController {
             @ApiResponse(responseCode = "422",
                     description = "Invalid vehicle type", content = @Content(mediaType = "*/*"))
     })
-    @PatchMapping
+    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegionalBaseFeeDto> changeRbf(@Valid @RequestBody RegionalBaseFeeDto rbfDto) {
         log.debug("REST request to change RBF {}", rbfDto);
         RegionalBaseFeeDto result = rbfService.updateRBF(rbfDto);
