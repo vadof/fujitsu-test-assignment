@@ -55,7 +55,7 @@ public class WeatherConditionService {
     private Optional<String> getStationNameByCityName(String cityName) {
         List<String> cityNames = Constants.CITY_NAMES;
         for (int i = 0; i < cityNames.size(); i++) {
-            if (cityNames.get(i).equalsIgnoreCase(cityName)) {
+            if (cityNames.get(i).equals(cityName)) {
                 return Optional.of(Constants.STATION_NAMES.get(i));
             }
         }

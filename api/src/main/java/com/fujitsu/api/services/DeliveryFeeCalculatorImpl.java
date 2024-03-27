@@ -25,16 +25,7 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
     }
 
     private void validateVehicleType(String vehicleType) {
-        boolean contains = false;
-
-        for (String type : Constants.VEHICLE_TYPES) {
-            if (type.equalsIgnoreCase(vehicleType)) {
-                contains = true;
-                break;
-            }
-        }
-
-        if (!contains) {
+        if (!Constants.VEHICLE_TYPES.contains(vehicleType)) {
             throw new AppException("Invalid vehicle type - " + vehicleType, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
@@ -50,6 +41,7 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
         }
     }
 
+    @Override
     public Double calculateRBF(String cityName, String vehicleType) {
         Double fee = Constants.MAX_RBF_FEE;
 
@@ -61,7 +53,7 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
 
     private Double calculateFee(String value, List<String> list) {
         for (int i = 0; i < list.size(); i++) {
-            if (value.equalsIgnoreCase(list.get(i))) {
+            if (value.equals(list.get(i))) {
                 return 0.5d * i;
             }
         }
@@ -69,7 +61,7 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
     }
 
     public Double calculateWeatherFees(WeatherCondition weatherCondition, String vehicleType) {
-        if (vehicleType.equalsIgnoreCase("Car")) return 0d;
+        if (vehicleType.equals("Car")) return 0d;
 
         Double fee = calculateATEF(weatherCondition.getAirTemperature(), vehicleType);
         fee += calculateWSEF(weatherCondition.getWindSpeed(), vehicleType);
@@ -80,7 +72,7 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
 
     @Override
     public Double calculateATEF(Double airTemperature, String vehicleType) {
-        if (vehicleType.equalsIgnoreCase("car")) {
+        if (vehicleType.equals("Car")) {
             return 0d;
         }
 
@@ -94,7 +86,7 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
 
     @Override
     public Double calculateWSEF(Double windSpeed, String vehicleType) {
-        if (windSpeed > 20 && vehicleType.equalsIgnoreCase("bike")) {
+        if (windSpeed > 20 && vehicleType.equals("Bike")) {
             throw new AppException("The use of the selected type of vehicle is prohibited due to weather conditions",
                     HttpStatus.FORBIDDEN);
         }
@@ -108,7 +100,7 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
 
     @Override
     public Double calculateWPEF(String phenomenon, String vehicleType) {
-        if (vehicleType.equalsIgnoreCase("car")) {
+        if (vehicleType.equals("Car")) {
             return 0d;
         }
 
