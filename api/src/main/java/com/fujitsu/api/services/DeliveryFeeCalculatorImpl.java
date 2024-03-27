@@ -1,6 +1,5 @@
 package com.fujitsu.api.services;
 
-import com.fujitsu.api.config.Constants;
 import com.fujitsu.api.entities.WeatherCondition;
 import com.fujitsu.api.exceptions.AppException;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -17,17 +15,11 @@ import java.util.List;
 public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
 
     private final WeatherConditionService weatherConditionService;
+    private final RegionalBaseFeeService rbfService;
 
     public Double calculateDeliveryFee(String cityName, String vehicleType, LocalDateTime dateTime) {
-        validateVehicleType(vehicleType);
         WeatherCondition weatherCondition = getWeatherCondition(cityName, dateTime);
         return calculateRBF(cityName, vehicleType) + calculateWeatherFees(weatherCondition, vehicleType);
-    }
-
-    private void validateVehicleType(String vehicleType) {
-        if (!Constants.VEHICLE_TYPES.contains(vehicleType)) {
-            throw new AppException("Invalid vehicle type - " + vehicleType, HttpStatus.UNPROCESSABLE_ENTITY);
-        }
     }
 
     private WeatherCondition getWeatherCondition(String cityName, LocalDateTime dateTime) {
@@ -43,21 +35,7 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
 
     @Override
     public Double calculateRBF(String cityName, String vehicleType) {
-        Double fee = Constants.MAX_RBF_FEE;
-
-        fee -= calculateFee(cityName, Constants.CITY_NAMES);
-        fee -= calculateFee(vehicleType, Constants.VEHICLE_TYPES);
-
-        return fee;
-    }
-
-    private Double calculateFee(String value, List<String> list) {
-        for (int i = 0; i < list.size(); i++) {
-            if (value.equals(list.get(i))) {
-                return 0.5d * i;
-            }
-        }
-        return 0d;
+        return rbfService.getRegionalBaseFee(cityName, vehicleType).getFee();
     }
 
     public Double calculateWeatherFees(WeatherCondition weatherCondition, String vehicleType) {

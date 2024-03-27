@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -53,10 +52,9 @@ public class WeatherConditionService {
     }
 
     private Optional<String> getStationNameByCityName(String cityName) {
-        List<String> cityNames = Constants.CITY_NAMES;
-        for (int i = 0; i < cityNames.size(); i++) {
-            if (cityNames.get(i).equals(cityName)) {
-                return Optional.of(Constants.STATION_NAMES.get(i));
+        for (String station : Constants.STATION_NAMES) {
+            if (station.contains(cityName)) {
+                return Optional.of(station);
             }
         }
         return Optional.empty();
