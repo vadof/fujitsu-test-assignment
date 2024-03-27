@@ -1,6 +1,6 @@
 package com.fujitsu.api.schedulers;
 
-import com.fujitsu.api.services.WeatherService;
+import com.fujitsu.api.services.weather.WeatherService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

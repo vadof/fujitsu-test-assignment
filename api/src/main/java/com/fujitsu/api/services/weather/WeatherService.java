@@ -1,4 +1,4 @@
-package com.fujitsu.api.services;
+package com.fujitsu.api.services.weather;
 
 import com.fujitsu.api.exceptions.AppException;
 

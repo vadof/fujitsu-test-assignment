@@ -1,6 +1,6 @@
 package com.fujitsu.api.config;
 
-import com.fujitsu.api.services.WeatherService;
+import com.fujitsu.api.services.weather.WeatherService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;

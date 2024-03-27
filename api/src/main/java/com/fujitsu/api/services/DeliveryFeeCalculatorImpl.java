@@ -2,6 +2,7 @@ package com.fujitsu.api.services;
 
 import com.fujitsu.api.entities.WeatherCondition;
 import com.fujitsu.api.exceptions.AppException;
+import com.fujitsu.api.services.weather.WeatherConditionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -64,7 +65,11 @@ public class DeliveryFeeCalculatorImpl implements DeliveryFeeCalculator {
 
     @Override
     public Double calculateWSEF(Double windSpeed, String vehicleType) {
-        if (windSpeed > 20 && vehicleType.equals("Bike")) {
+        if (!vehicleType.equals("Bike")) {
+            return 0d;
+        }
+
+        if (windSpeed > 20) {
             throw new AppException("The use of the selected type of vehicle is prohibited due to weather conditions",
                     HttpStatus.FORBIDDEN);
         }
