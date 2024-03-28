@@ -40,47 +40,43 @@ public class WeatherConditionServiceTests {
     }
 
     @Test
-    @DisplayName("Save WeatherCondition and then get it")
-    void saveAndGetLatestWeatherCondition() {
-        WeatherCondition weatherCondition1 = WeatherConditionMock.getWeatherConditionMock(null);
-        WeatherCondition weatherCondition2 = WeatherConditionMock.getWeatherConditionMock(null);
-        weatherCondition2.setAirTemperature(100d);
+    @DisplayName("Get latest WeatherCondition by station name")
+    void getLatestWeatherConditionByStationName() {
+        WeatherCondition weatherCondition = WeatherConditionMock.getWeatherConditionMock(null);
+        String name = weatherCondition.getStation().getName();
 
-        when(repository.save(weatherCondition1)).thenReturn(weatherCondition1);
-        when(repository.save(weatherCondition2)).thenReturn(weatherCondition2);
+        when(repository.findLatestByStationName(name))
+                .thenReturn(Optional.of(weatherCondition));
 
-        service.save(weatherCondition1);
-        service.save(weatherCondition2);
-
-        Optional<WeatherCondition> latest = service.getLatestWeatherCondition(weatherCondition1.getStationName());
+        Optional<WeatherCondition> latest = service.getLatestWeatherCondition(name);
 
         assertTrue(latest.isPresent());
-        assertThat(latest.get().getAirTemperature()).isEqualTo(weatherCondition2.getAirTemperature());
+        assertThat(latest.get().getAirTemperature()).isEqualTo(weatherCondition.getAirTemperature());
     }
 
     @Test
-    @DisplayName("Save WeatherCondition and then get it by city name")
-    void saveAndGetLatestWeatherConditionByCitySuccess() {
+    @DisplayName("Get latest WeatherCondition by city name")
+    void getLatestWeatherConditionByCity() {
         WeatherCondition weatherCondition = WeatherConditionMock.getWeatherConditionMock(null);
+        String name = weatherCondition.getStation().getCity();
 
-        when(repository.save(weatherCondition)).thenReturn(weatherCondition);
+        when(repository.findLatestByCityName(name))
+                .thenReturn(Optional.of(weatherCondition));
 
-        service.save(weatherCondition);
-
-        Optional<WeatherCondition> latest = service.getLatestWeatherConditionByCity("Tallinn");
+        Optional<WeatherCondition> latest = service.getLatestWeatherConditionByCity(name);
 
         assertTrue(latest.isPresent());
-        assertThat(latest.get().getStationName()).isEqualTo(weatherCondition.getStationName());
+        assertThat(latest.get().getAirTemperature()).isEqualTo(weatherCondition.getAirTemperature());
     }
 
     @Test
-    @DisplayName("Save WeatherCondition and then get it by wrong city name")
-    void saveAndGetLatestWeatherConditionByWrongCity() {
+    @DisplayName("Get latest WeatherCondition by wrong city name")
+    void getLatestWeatherConditionByWrongCity() {
         WeatherCondition weatherCondition = WeatherConditionMock.getWeatherConditionMock(null);
+        String name = weatherCondition.getStation().getCity();
 
-        when(repository.save(weatherCondition)).thenReturn(weatherCondition);
-
-        service.save(weatherCondition);
+        when(repository.findLatestByCityName(name))
+                .thenReturn(Optional.of(weatherCondition));
 
         Optional<WeatherCondition> latest = service.getLatestWeatherConditionByCity("Rakvere");
 
@@ -91,14 +87,14 @@ public class WeatherConditionServiceTests {
     @DisplayName("Get WeatherCondition by city name at specified date")
     void getWeatherConditionByCityAndDate() {
         WeatherCondition weatherCondition = WeatherConditionMock.getWeatherConditionMock(null);
-        service.save(weatherCondition);
+        String name = weatherCondition.getStation().getCity();
 
         LocalDateTime date = weatherCondition.getTimestamp().toLocalDateTime().plusHours(1);
 
-        when(repository.findByStationNameAtSpecifiedDate(weatherCondition.getStationName(), date))
+        when(repository.findByCityNameAtSpecifiedDate(name, date))
                 .thenReturn(Optional.of(weatherCondition));
 
-        Optional<WeatherCondition> result = service.getWeatherConditionByCityAndDate("Tallinn", date);
+        Optional<WeatherCondition> result = service.getWeatherConditionByCityAndDate(name, date);
 
         assertTrue(result.isPresent());
         assertThat(result.get().getTimestamp()).isEqualTo(weatherCondition.getTimestamp());

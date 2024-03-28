@@ -1,19 +1,19 @@
 package com.fujitsu.api.utils;
 
-import com.fujitsu.api.dtos.xml.Observations;
+import com.fujitsu.api.dtos.xml.ObservationsXML;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 
-public class ObservationsParser implements XMLParser<Observations> {
+public class ObservationsParser implements XMLParser<ObservationsXML> {
 
     @Override
-    public Observations parseXML(String xmlString) throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(Observations.class);
+    public ObservationsXML parseXML(String xmlString) throws JAXBException {
+        JAXBContext jaxbContext = JAXBContext.newInstance(ObservationsXML.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-        return (Observations) unmarshaller.unmarshal(new StringReader(xmlString));
+        return (ObservationsXML) unmarshaller.unmarshal(new StringReader(xmlString));
     }
 }

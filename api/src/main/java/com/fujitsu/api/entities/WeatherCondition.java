@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,11 +29,9 @@ public class WeatherCondition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "wmo_code", nullable = false)
-    private Integer wmoCode;
-
-    @Column(name = "station_name", nullable = false)
-    private String stationName;
+    @ManyToOne
+    @JoinColumn(name = "station_code", nullable = false)
+    private Station station;
 
     @Column(name = "air_temperature", columnDefinition = "DECIMAL(3,1)", nullable = false)
     private Double airTemperature;

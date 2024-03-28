@@ -16,10 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @XmlRootElement(name = "observations")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Observations {
+public class ObservationsXML {
     @XmlAttribute
     private long timestamp;
 
     @XmlElement(name = "station")
-    private List<Station> stations;
+    private List<StationXML> stations;
 }

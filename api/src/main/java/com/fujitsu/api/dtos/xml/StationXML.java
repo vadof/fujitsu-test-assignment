@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @AllArgsConstructor
 @Builder
 @XmlRootElement(name = "station")
-public class Station {
+public class StationXML {
     private String name;
     private Integer wmocode;
     private Double airtemperature;

@@ -239,5 +239,22 @@ public class DeliveryFeeCalculatorTests {
         assertThat(fee).isEqualTo(5d);
     }
 
+    @Test
+    @DisplayName("Calculate Delivery fee weather conditions not found")
+    public void calculateDeliveryFeeWeatherConditionsNotFound() {
+        String city = "Tallinn";
+        String vehicle = "Bike";
+        LocalDateTime date = LocalDateTime.now();
+
+        when(weatherConditionService.getLatestWeatherConditionByCity(city))
+                .thenReturn(Optional.empty());
+
+        when(weatherConditionService.getWeatherConditionByCityAndDate(city, date))
+                .thenReturn(Optional.empty());
+
+        assertThrows(AppException.class, () -> calculator.calculateDeliveryFee(city, vehicle, null));
+        assertThrows(AppException.class, () -> calculator.calculateDeliveryFee(city, vehicle, date));
+    }
+
 
 }
