@@ -3,6 +3,13 @@
 - Java 17
 - H2 Database
 
+## How to run a project using Docker
+
+Ensure that port 8080 is available.
+- Go to `api` directory
+- Run `mvn clean package` to generate the application JAR file
+- Run `docker compose up`
+
 ## Description
 
 - In addition to the table where weather data is stored,
