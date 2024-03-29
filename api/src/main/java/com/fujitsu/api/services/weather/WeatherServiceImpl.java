@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -82,5 +83,10 @@ public class WeatherServiceImpl implements WeatherService {
 
     private Timestamp getUnixTimestamp(Long value) {
         return new Timestamp(value * 1000);
+    }
+
+    @Bean
+    private void initializeWeatherData() {
+        updateWeatherData();
     }
 }
