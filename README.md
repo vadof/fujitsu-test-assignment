@@ -8,7 +8,7 @@
 Ensure that port 8080 is available.
 - Go to `api` directory
 - Run `mvn clean package` to generate the application JAR file
-- Run `docker compose up`
+- Run `docker compose up` to start the project
 
 ## Description
 
