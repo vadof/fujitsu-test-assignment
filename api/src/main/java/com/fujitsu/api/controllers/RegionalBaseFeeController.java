@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/rbf")
-@Tag(name = "RBF", description = "API operations with RBF")
+@Tag(name = "Regional Base Fee (RBF) ", description = "API operations with RBF")
 @AllArgsConstructor
 @Validated
 @Slf4j

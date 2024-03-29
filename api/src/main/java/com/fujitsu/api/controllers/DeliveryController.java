@@ -57,8 +57,8 @@ public class DeliveryController {
         return ResponseEntity.ok().body(fee);
     }
 
-    @Operation(summary = "Get a map with available transport in each city " +
-            "where the key is the city and the value is a list with vehicles")
+    @Operation(summary = "Get a map with available vehicle types in each city " +
+            "where the key is the city and the value is a list with vehicle types")
     @ApiResponse(responseCode = "200", description = "Return map")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, List<String>>> getAvailableVehicleMap() {
