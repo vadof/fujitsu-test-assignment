@@ -16,7 +16,7 @@ public class RegionalBaseFeeDto {
     @NotBlank(message = "City cannot be blank")
     private String city;
 
-    @NotBlank(message = "City cannot be blank")
+    @NotBlank(message = "Vehicle type cannot be blank")
     private String vehicleType;
 
     @NotNull(message = "Fee cannot be null")
