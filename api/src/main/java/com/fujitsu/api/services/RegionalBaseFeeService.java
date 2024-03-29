@@ -10,6 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -41,6 +45,21 @@ public class RegionalBaseFeeService {
         repository.save(existing);
 
         return mapper.toDto(existing);
+    }
+
+    public Map<String, List<String>> getMapWithAvailableVehiclesInCities() {
+        List<String[]> resultList = repository.getCityToVehicleTypeList();
+
+        Map<String, List<String>> map = new HashMap<>();
+
+        for (String[] result : resultList) {
+            String city = result[0];
+            List<String> vehicles = Arrays.asList(result[1].split(","));
+
+            map.put(city, vehicles);
+        }
+
+        return map;
     }
 
 }

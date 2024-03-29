@@ -1,6 +1,7 @@
 package com.fujitsu.api.controllers;
 
-import com.fujitsu.api.services.DeliveryFeeCalculatorImpl;
+import com.fujitsu.api.services.delivery.DeliveryFeeCalculatorImpl;
+import com.fujitsu.api.services.RegionalBaseFeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Delivery", description = "API operations with delivery")
 @RestController
@@ -26,6 +29,7 @@ import java.time.LocalDateTime;
 public class DeliveryController {
 
     private final DeliveryFeeCalculatorImpl deliveryFeeCalculator;
+    private final RegionalBaseFeeService regionalBaseFeeService;
 
     @Operation(summary = "Calculate delivery fee depending on the city and type of vehicle." +
             " If a date is specified, the fee will be calculated based on weather data that occurred during the specified period of time")
@@ -51,6 +55,16 @@ public class DeliveryController {
         log.debug("REST request to get Delivery Fee {} - {}", city, vehicleType);
         Double fee = deliveryFeeCalculator.calculateDeliveryFee(city, vehicleType, date);
         return ResponseEntity.ok().body(fee);
+    }
+
+    @Operation(summary = "Get a map with available transport in each city " +
+            "where the key is the city and the value is a list with vehicles")
+    @ApiResponse(responseCode = "200", description = "Return map")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, List<String>>> getAvailableVehicleMap() {
+        log.debug("REST request to get available vehicle map");
+        Map<String, List<String>> map = regionalBaseFeeService.getMapWithAvailableVehiclesInCities();
+        return ResponseEntity.ok().body(map);
     }
 
 }

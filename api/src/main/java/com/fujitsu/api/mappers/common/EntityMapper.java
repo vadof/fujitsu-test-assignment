@@ -1,4 +1,4 @@
-package com.fujitsu.api.mappers;
+package com.fujitsu.api.mappers.common;
 
 import org.mapstruct.IterableMapping;
 import org.mapstruct.NullValueMappingStrategy;

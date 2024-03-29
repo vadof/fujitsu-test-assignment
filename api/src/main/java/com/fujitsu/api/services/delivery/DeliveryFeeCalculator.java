@@ -1,4 +1,4 @@
-package com.fujitsu.api.services;
+package com.fujitsu.api.services.delivery;
 
 public interface DeliveryFeeCalculator {
     Double calculateRBF(String cityName, String vehicleType);

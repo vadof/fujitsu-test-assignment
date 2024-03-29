@@ -16,10 +16,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,7 +43,7 @@ public class RegionalBaseFeeServiceTests {
     private RegionalBaseFeeService service;
 
     @Test
-    @DisplayName("Get RBF | Success")
+    @DisplayName("Get RBF")
     void getRbfSuccess() {
         RegionalBaseFee rbf = RegionalBaseFeeMock.getRegionalBaseFeeMock(1L);
 
@@ -55,7 +59,7 @@ public class RegionalBaseFeeServiceTests {
     }
 
     @Test
-    @DisplayName("Get RBF City not found | Failure")
+    @DisplayName("Get RBF City not found")
     void getRbfCityNotFound() {
         RegionalBaseFee rbf = RegionalBaseFeeMock.getRegionalBaseFeeMock(1L);
 
@@ -69,7 +73,7 @@ public class RegionalBaseFeeServiceTests {
     }
 
     @Test
-    @DisplayName("Get RBF Invalid Vehicle | Failure")
+    @DisplayName("Get RBF Invalid Vehicle")
     void getRbfInvalidVehicle() {
         RegionalBaseFee rbf = RegionalBaseFeeMock.getRegionalBaseFeeMock(1L);
 
@@ -84,7 +88,7 @@ public class RegionalBaseFeeServiceTests {
     }
 
     @Test
-    @DisplayName("Update RBF | Success")
+    @DisplayName("Update RBF")
     void updateRBF() {
         RegionalBaseFee existing = RegionalBaseFeeMock.getRegionalBaseFeeMock(1L);
         RegionalBaseFeeDto toUpdate = new RegionalBaseFeeDto("Rakvere", "Car", 1d);
@@ -101,5 +105,29 @@ public class RegionalBaseFeeServiceTests {
         assertThat(updated.getFee()).isEqualTo(toUpdate.getFee());
         assertThat(updated.getCity()).isEqualTo(existing.getCity());
         assertThat(updated.getVehicleType()).isEqualTo(existing.getVehicleType());
+    }
+
+    @Test
+    @DisplayName("Get city vehicles map")
+    void getCityVehiclesMap() {
+        String city = "Tallinn";
+        String vehicles = "Car,Scooter,Bike";
+        String[] arr = {city, vehicles};
+
+        List<String[]> result = new ArrayList<>();
+        result.add(arr);
+
+        when(repository.getCityToVehicleTypeList()).thenReturn(result);
+
+        Map<String, List<String>> map = service.getMapWithAvailableVehiclesInCities();
+
+        assertTrue(map.containsKey(city));
+
+        List<String> values = map.get(city);
+
+        assertThat(values.size()).isEqualTo(3);
+        assertTrue(values.contains("Car"));
+        assertTrue(values.contains("Scooter"));
+        assertTrue(values.contains("Bike"));
     }
 }
